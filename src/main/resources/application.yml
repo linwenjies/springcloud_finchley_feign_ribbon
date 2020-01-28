@@ -1,0 +1,50 @@
+server:
+  port: 8009
+
+spring:
+  application:
+    name: eureka-feign-ribbon
+
+eureka:
+  client:
+    serviceUrl: #注册中心地址
+      defaultZone: http://lwj:lwj@122.51.153.21:8001/eureka/,http://lwj:lwj@122.51.153.21:8002/eureka/,http://lwj:lwj@122.51.153.21:8003/eureka/
+    healthcheck:
+      enabled: true
+  instance:
+    lease-renewal-interval-in-seconds: 5 #client发送心跳给server的频率，默认30秒
+    lease-expiration-duration-in-seconds: 5 #server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内没有收到下一次心跳则移除这个实例，默认90秒
+    preferIpAddress: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+
+#下面的配置在feign的调用中也是有效的    
+ribbon:
+  ConnectTimeout: 1000
+  ReadTimeout: 500
+  eager-load:
+    enabled: true #开启饥饿加载机制
+    clients: eureka-client #指定饥饿调用的服务名，多个的话用逗号分隔开
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 1
+  OkToRetryOnAllOperations: true
+
+#下面的这种配置在上面ribbon的配置下不好用
+feign:
+  client:
+    config:
+      com:
+        lwj:
+          demo:
+            feign:
+              FeignConfigService:
+                 ConnectTimeout: 1000
+                 ReadTimeout: 5000000
+
+#feign调用日志输出
+logging:
+  level:
+    com:
+      lwj:
+        demo:
+          feign:
+            FeignService: DEBUG
