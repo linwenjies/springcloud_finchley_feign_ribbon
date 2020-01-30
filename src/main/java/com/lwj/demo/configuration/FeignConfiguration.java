@@ -24,6 +24,10 @@ public class FeignConfiguration {
 		return Logger.Level.FULL;
 	}
 	
+	/**
+	 * 自定义权限验证
+	 * @return
+	 */
 	@Bean
 	public FeignBasicAuthRequestInterceptor basicAuthRequestInterceptor() {
 		return new FeignBasicAuthRequestInterceptor();

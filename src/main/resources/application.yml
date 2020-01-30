@@ -28,8 +28,16 @@ ribbon:
   MaxAutoRetriesNextServer: 1
   OkToRetryOnAllOperations: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
 #下面的这种配置在上面ribbon的配置下不好用
 feign:
+  hystrix:
+    enabled: true
   client:
     config:
       com:
@@ -39,7 +47,7 @@ feign:
               FeignConfigService:
                  ConnectTimeout: 1000
                  ReadTimeout: 5000000
-
+  
 #feign调用日志输出
 logging:
   level:
